@@ -1,5 +1,5 @@
 plugins {
-  kotlin("multiplatform") version "1.4.10"
+  kotlin("multiplatform") version "1.4.20"
 }
 group = "com.asyncant"
 version = "1.0-SNAPSHOT"
@@ -10,7 +10,7 @@ repositories {
 kotlin {
   jvm {
     compilations.all {
-      kotlinOptions.jvmTarget = "13"
+      kotlinOptions.jvmTarget = "15"
     }
   }
   val hostOs = System.getProperty("os.name")
