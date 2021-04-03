@@ -45,7 +45,7 @@ object Sha256 {
     }
   }
 
-  private fun sha256Transform(ctx: Sha256Ctx, data: ByteArray) {
+  private fun sha256Transform(ctx: Sha256Ctx, data: ByteArray, offset: Int) {
     var a: Int
     var b: Int
     var c: Int
@@ -59,7 +59,7 @@ object Sha256 {
     val m = IntArray(64)
 
     for (i in 0 until 16) {
-      val j = i * 4
+      val j = offset + i * 4
       m[i] = ((data[j].toInt() and 0xFF shl 24) or
         (data[j + 1].toInt() and 0xFF shl 16) or
         (data[j + 2].toInt() and 0xFF shl 8) or
@@ -101,15 +101,14 @@ object Sha256 {
   }
 
   private fun sha256Update(ctx: Sha256Ctx, data: ByteArray) {
-    for (byte in data) {
-      ctx.data[ctx.dataLength] = byte
-      ctx.dataLength++
-      if (ctx.dataLength == 64) {
-        sha256Transform(ctx, ctx.data)
-        ctx.bitLength += 512
-        ctx.dataLength = 0
-      }
+    val total = data.size - 64
+    for (i in 0..total step 64) {
+      sha256Transform(ctx, data, i)
+      ctx.bitLength += 512
     }
+    ctx.dataLength = data.size % 64
+    val offset = (data.size / 64) * 64
+    for (i in 0 until ctx.dataLength) ctx.data[i] = data[offset + i]
   }
 
   private fun sha256Final(ctx: Sha256Ctx): ByteArray {
@@ -120,7 +119,7 @@ object Sha256 {
     } else {
       ctx.data[ctx.dataLength] = 0x80.toByte()
       for (i in ctx.dataLength + 1 until 64) ctx.data[i] = 0
-      sha256Transform(ctx, ctx.data)
+      sha256Transform(ctx, ctx.data, 0)
       for (i in 0 until 56) ctx.data[i] = 0
     }
 
@@ -134,7 +133,7 @@ object Sha256 {
     ctx.data[58] = ((ctx.bitLength ushr 40) and 0xFF).toByte()
     ctx.data[57] = ((ctx.bitLength ushr 48) and 0xFF).toByte()
     ctx.data[56] = ((ctx.bitLength ushr 56) and 0xFF).toByte()
-    sha256Transform(ctx, ctx.data)
+    sha256Transform(ctx, ctx.data, 0)
 
     // Since this implementation uses little endian byte ordering and SHA uses big endian,
     // reverse all the bytes when copying the final state to the output hash.
