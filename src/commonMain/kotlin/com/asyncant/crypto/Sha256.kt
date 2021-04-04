@@ -25,7 +25,7 @@ object Sha256 {
     0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
     0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
     0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
-  )
+  ).map { it.toInt() }.toIntArray()
 
   private class Sha256Ctx {
     var data: ByteArray = ByteArray(64)
@@ -78,7 +78,7 @@ object Sha256 {
     h = ctx.state[7]
 
     for (i in 0 until 64) {
-      t1 = h + ep1(e) + ch(e, f, g) + k[i].toInt() + m[i]
+      t1 = h + ep1(e) + ch(e, f, g) + k[i] + m[i]
       t2 = ep0(a) + maj(a, b, c)
       h = g
       g = f
