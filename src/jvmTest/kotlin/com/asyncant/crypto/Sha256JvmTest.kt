@@ -1,6 +1,5 @@
 package com.asyncant.crypto
 
-import com.asyncant.crypto.Sha256.sha256
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Test
 import java.security.MessageDigest
