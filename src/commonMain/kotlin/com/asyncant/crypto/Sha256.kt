@@ -58,13 +58,8 @@ object Sha256 {
     var t2: Int
     val m = IntArray(64)
 
-    for (i in 0 until 16) {
-      val j = offset + i * 4
-      m[i] = ((data[j].toInt() and 0xFF shl 24) or
-        (data[j + 1].toInt() and 0xFF shl 16) or
-        (data[j + 2].toInt() and 0xFF shl 8) or
-        (data[j + 3].toInt() and 0xFF))
-    }
+    data.copyToIntArray(offset, 16, m)
+
     for (i in 16 until 64) {
       m[i] = sig1(m[i - 2]) + m[i - 7] + sig0(m[i - 15]) + m[i - 16]
     }
@@ -166,3 +161,5 @@ object Sha256 {
 
   private fun rotateRight(a: Int, b: Int) = a ushr b or (a shl (32 - b))
 }
+
+expect inline fun ByteArray.copyToIntArray(sourceOffset: Int, count: Int, target: IntArray)
