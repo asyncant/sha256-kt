@@ -8,7 +8,7 @@ import java.security.MessageDigest
 import kotlin.random.Random
 
 @ExperimentalUnsignedTypes
-internal class Sha256Test {
+internal class Sha256JvmTest {
   private val javaMessageDigest = MessageDigest.getInstance("SHA-256")
 
   @Test
