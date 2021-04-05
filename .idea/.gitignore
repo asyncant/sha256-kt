@@ -4,3 +4,6 @@
 /compiler.xml
 /jarRepositories.xml
 /modules/
+/modules.xml
+/*.iml
+/gradle.xml
