@@ -1,5 +1,5 @@
 plugins {
-  kotlin("multiplatform") version "1.4.20"
+  kotlin("multiplatform") version "1.5.0-M2"
 }
 group = "com.asyncant"
 version = "1.0-SNAPSHOT"
