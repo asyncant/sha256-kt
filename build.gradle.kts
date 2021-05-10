@@ -1,7 +1,9 @@
 plugins {
   kotlin("multiplatform") version "1.5.0-M2"
+  id("maven-publish")
 }
-group = "com.asyncant"
+
+group = "com.asyncant.crypto"
 version = "1.0-SNAPSHOT"
 
 repositories {
