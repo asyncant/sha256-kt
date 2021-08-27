@@ -1,10 +1,12 @@
 plugins {
   kotlin("multiplatform") version "1.5.0"
+  id("org.jetbrains.dokka") version "1.4.32"
   id("maven-publish")
+  id("signing")
 }
 
 group = "com.asyncant.crypto"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 repositories {
   mavenCentral()
@@ -46,4 +48,56 @@ kotlin {
 
 tasks.withType<Test> {
   useJUnitPlatform()
+}
+
+val javadocJar by tasks.registering(Jar::class) {
+  dependsOn(tasks.dokkaHtml)
+  archiveClassifier.set("javadoc")
+  from(tasks.dokkaHtml.get().outputDirectory)
+}
+
+publishing {
+  repositories {
+    maven {
+      name = "sonatype"
+      setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+
+      credentials(PasswordCredentials::class)
+    }
+  }
+
+  publications.withType<MavenPublication> {
+    artifact(javadocJar)
+    pom {
+      name.set("sha256-kt")
+      description.set("Pure Kotlin SHA-256 hash algorithm implementation.")
+      url.set("https://github.com/asyncant/sha256-kt")
+
+      licenses {
+        license {
+          name.set("Public Domain")
+          distribution.set("repo")
+        }
+      }
+
+      developers {
+        developer {
+          id.set("asyncant")
+          name.set("asyncant")
+          url.set("http://www.asyncant.com")
+        }
+      }
+
+      scm {
+        connection.set("scm:git:git://github.com/asyncant/sha256-kt.git")
+        developerConnection.set("scm:git:ssh://github.com/asyncant/sha256-kt.git")
+        url.set("https://github.com/asyncant/sha256-kt")
+      }
+    }
+  }
+}
+
+signing {
+  useGpgCmd()
+  sign(publishing.publications)
 }
