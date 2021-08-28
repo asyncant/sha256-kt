@@ -60,7 +60,9 @@ publishing {
   repositories {
     maven {
       name = "sonatype"
-      setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+      val releaseUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+      val snapshotUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+      setUrl(if (version.toString().endsWith("SNAPSHOT")) snapshotUrl else releaseUrl)
 
       credentials(PasswordCredentials::class)
     }
