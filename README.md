@@ -20,12 +20,12 @@ val hash = sha256(input)
 Download
 --------
 
-The library can be found on maven central [here](https://search.maven.org/artifact/com.asyncant.crypto/sha256-kt).
+The library can be found on Maven Central [here](https://search.maven.org/artifact/com.asyncant.crypto/sha256-kt).
 
 ### Gradle
 
 ```kotlin
-implementation("com.asyncant.crypto:sha256-kt:1.0")
+implementation("com.asyncant.crypto:sha256-kt:1.1")
 ```
 
 ### Maven
@@ -34,7 +34,7 @@ implementation("com.asyncant.crypto:sha256-kt:1.0")
 <dependency>
     <groupId>com.asyncant.crypto</groupId>
     <artifactId>sha256-kt</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 

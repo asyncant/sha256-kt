@@ -1,12 +1,12 @@
 plugins {
   kotlin("multiplatform") version "2.2.21"
   id("org.jetbrains.dokka") version "2.1.0"
-  id("maven-publish")
+  id("com.vanniktech.maven.publish") version "0.35.0"
   id("signing")
 }
 
 group = "com.asyncant.crypto"
-version = "1.1-SNAPSHOT"
+version = "1.1"
 
 repositories {
   mavenCentral()
@@ -43,45 +43,34 @@ val javadocJar by tasks.registering(Jar::class) {
   from(dokka.dokkaPublications.html.get().outputDirectory)
 }
 
-publishing {
-  repositories {
-    maven {
-      name = "sonatype"
-      val releaseUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-      val snapshotUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-      setUrl(if (version.toString().endsWith("SNAPSHOT")) snapshotUrl else releaseUrl)
+mavenPublishing {
+  publishToMavenCentral()
 
-      credentials(PasswordCredentials::class)
+  signAllPublications()
+
+  coordinates(group.toString(), project.name, version.toString())
+
+  pom {
+    name = "sha256-kt"
+    description = "Pure Kotlin SHA-256 hash algorithm implementation."
+    url = "https://github.com/asyncant/sha256-kt"
+    licenses {
+      license {
+        name = "Public Domain"
+        distribution = "repo"
+      }
     }
-  }
-
-  publications.withType<MavenPublication> {
-    artifact(javadocJar)
-    pom {
-      name.set("sha256-kt")
-      description.set("Pure Kotlin SHA-256 hash algorithm implementation.")
-      url.set("https://github.com/asyncant/sha256-kt")
-
-      licenses {
-        license {
-          name.set("Public Domain")
-          distribution.set("repo")
-        }
+    developers {
+      developer {
+        id = "asyncant"
+        name = "asyncant"
+        url = "http://www.asyncant.com"
       }
-
-      developers {
-        developer {
-          id.set("asyncant")
-          name.set("asyncant")
-          url.set("http://www.asyncant.com")
-        }
-      }
-
-      scm {
-        connection.set("scm:git:git://github.com/asyncant/sha256-kt.git")
-        developerConnection.set("scm:git:ssh://github.com/asyncant/sha256-kt.git")
-        url.set("https://github.com/asyncant/sha256-kt")
-      }
+    }
+    scm {
+      connection = "scm:git:git://github.com/asyncant/sha256-kt.git"
+      developerConnection = "scm:git:ssh://github.com/asyncant/sha256-kt.git"
+      url = "https://github.com/asyncant/sha256-kt"
     }
   }
 }
