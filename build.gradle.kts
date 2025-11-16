@@ -1,6 +1,6 @@
 plugins {
-  kotlin("multiplatform") version "1.5.0"
-  id("org.jetbrains.dokka") version "1.4.32"
+  kotlin("multiplatform") version "2.2.21"
+  id("org.jetbrains.dokka") version "2.1.0"
   id("maven-publish")
   id("signing")
 }
@@ -12,37 +12,24 @@ repositories {
   mavenCentral()
 }
 kotlin {
-  jvm {
-    compilations.all {
-      kotlinOptions.jvmTarget = "15"
-    }
-  }
-  val hostOs = System.getProperty("os.name")
-  val isMingwX64 = hostOs.startsWith("Windows")
-  val nativeTarget = when {
-    hostOs == "Mac OS X" -> macosX64("native")
-    hostOs == "Linux" -> linuxX64("native")
-    isMingwX64 -> mingwX64("native")
-    else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-  }
+  jvm()
+  linuxX64()
+  macosX64()
+  mingwX64()
 
   sourceSets {
-    val commonMain by getting
-    val commonTest by getting {
+    commonTest {
       dependencies {
         implementation(kotlin("test-common"))
         implementation(kotlin("test-annotations-common"))
       }
     }
-    val jvmMain by getting
-    val jvmTest by getting {
+    jvmTest {
       dependencies {
         implementation(kotlin("test-junit5"))
-        implementation("org.junit.jupiter:junit-jupiter:5.7.0")
+        implementation("org.junit.jupiter:junit-jupiter:6.0.1")
       }
     }
-    val nativeMain by getting
-    val nativeTest by getting
   }
 }
 
@@ -51,9 +38,9 @@ tasks.withType<Test> {
 }
 
 val javadocJar by tasks.registering(Jar::class) {
-  dependsOn(tasks.dokkaHtml)
+  dependsOn(tasks.dokkaGenerateHtml)
   archiveClassifier.set("javadoc")
-  from(tasks.dokkaHtml.get().outputDirectory)
+  from(dokka.dokkaPublications.html.get().outputDirectory)
 }
 
 publishing {

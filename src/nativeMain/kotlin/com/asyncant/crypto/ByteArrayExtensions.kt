@@ -1,4 +1,8 @@
+@file:OptIn(ExperimentalNativeApi::class)
+
 package com.asyncant.crypto
+
+import kotlin.experimental.ExperimentalNativeApi
 
 actual inline fun ByteArray.copyToIntArray(sourceOffset: Int, count: Int, target: IntArray) {
   for (i in 0 until count) {
